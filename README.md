@@ -4,6 +4,9 @@ Docker Honeypot (not working yet)
 # how to run
 - `docker build -t honeypot .`
 - `docker run -p 22:22 -p 23:23 -p 25:25 -p 443:443 -p 5060:5060/udp honeypot`
+
+# Original doc from fabio-d
+github.com/fabio-d/honeypot
 ## About this project
 This honeypot is designed to listen on **all** TCP and UDP ports. It emulates the following services:
  * SSH (`22/tcp`)
