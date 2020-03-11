@@ -13,7 +13,6 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 import datetime, select, sys, ssl, time, traceback
-from termcolor import colored
 
 def __prettyprint(text, tee_target, *oargs, **kw):
 	text = text.replace('\r\n', '\n').replace('\r','\n')
@@ -21,7 +20,7 @@ def __prettyprint(text, tee_target, *oargs, **kw):
 	for i in range(len(lines)):
 		if i != 0:
 			tee_target.write('\n')
-		tee_target.write(colored(lines[i], *oargs, **kw))
+		tee_target.write((lines[i], *oargs))
 
 def hexdump(src, length=16):
 	FILTER = ''.join([(len(repr(chr(x))) == 3) and chr(x) or '.' for x in range(256)])
@@ -37,12 +36,12 @@ def hexdump(src, length=16):
 def tee_received_text(text, tee_target=sys.stderr, fix_incoming_endl=False):
 	if fix_incoming_endl:
 		text = text.replace('\r', '\n')
-	__prettyprint(text.replace('\r', ''), tee_target, 'red', 'on_yellow')
+	print(text.replace('\r', ''), tee_target)
 	return text
 
 def tee_sent_text(text, tee_target=sys.stderr):
 	text = text.replace('\n', '\r\n')
-	__prettyprint(text, tee_target, 'blue', 'on_cyan')
+	print(text, tee_target)
 	return text
 
 def tee_received_bin(data, tee_target=sys.stderr):
@@ -129,4 +128,4 @@ def log_append(log_name, *columns):
 		with open("logs/{}.txt".format(log_name), "a") as logfile:
 			logfile.write("{}\n".format(','.join(data)))
 	except IOError as err:
-		print "log_append failed:", err
+		print ("log_append failed:"), err

@@ -13,11 +13,7 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-import datetime, os, select, socket, SocketServer, struct, subprocess, sys, threading, time, traceback
-from termcolor import colored
-
-import GeoIP
-geoip = GeoIP.new(GeoIP.GEOIP_MEMORY_CACHE | GeoIP.GEOIP_CHECK_CACHE)
+import datetime, os, select, socket, socketserver, struct, subprocess, sys, threading, time, traceback
 
 try:
 	from config import LOCAL_IP, TCP_MAGIC_PORT, UDP_DISCARD_FROM
@@ -80,7 +76,7 @@ def handle_tcp_default(sk, dstport):
 		pass
 
 	if data[:3] in SSL_CLIENT_HELLO_SIGNATURES:
-		print colored("Guessing this is a SSL/TLS connection, attempting to handshake.", 'red', attrs=['bold'])
+		print("Guessing this is a SSL/TLS connection, attempting to handshake.")
 		handle_tcp_hexdump_ssl(sk, dstport)
 	elif data.startswith("GET "):
 		handle_tcp_http(sk, dstport)
@@ -119,7 +115,7 @@ class SingleTCPHandler(SocketServer.BaseRequestHandler):
 		dstaddr, dstport = self.getoriginaldest()
 		timestr = datetime.datetime.now().strftime("%a %Y/%m/%d %H:%M:%S%z")
 		origcountry = geoip.country_name_by_addr(srcaddr)
-		print colored("[{}]: Intruder {}:{} ({}) connected to fake port {}/tcp".format(timestr, srcaddr, srcport, origcountry, dstport), 'magenta', attrs=['bold'])
+		print("[{}]: Intruder {}:{} ({}) connected to fake port {}/tcp".format(timestr, srcaddr, srcport, dstport))
 		log_append('intruders', 'TCP', dstport, srcaddr, srcport, origcountry)
 		handle_tcp(self.request, dstport)
 
@@ -155,9 +151,9 @@ class UDP_socketobject_proxy:
 
 def process_incoming_udp(data, srcaddr, srcport, dstport):
 	timestr = datetime.datetime.now().strftime("%a %Y/%m/%d %H:%M:%S%z")
-	origcountry = geoip.country_name_by_addr(srcaddr)
+	origcountry = Geoip.country_name_by_addr(srcaddr)
 	log_append('intruders', 'UDP', dstport, srcaddr, srcport, origcountry)
-	print colored("[{}]: Intruder {}:{} ({}) connected to fake port {}/udp".format(timestr, srcaddr, srcport, origcountry, dstport), 'magenta', attrs=['bold'])
+	print("[{}]: Intruder {}:{} ({}) connected to fake port {}/udp".format(timestr, srcaddr, srcport, origcountry, dstport))
 	handle_udp(UDP_socketobject_proxy(dstport), data, (srcaddr, srcport), dstport)
 
 def udp_raw_agent_dispatcher(incoming_packets, abort_callback):

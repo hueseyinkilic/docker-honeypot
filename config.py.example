@@ -3,7 +3,7 @@
 #       configure iptables (see README.md for full setup instructions).
 
 # IP to listen on. If you are behing NAT, this must be the private IP.
-LOCAL_IP = '192.168.1.123'
+LOCAL_IP = $ip
 
 # iptables must be configured to redirect all incoming TCP connections to this
 # port (see README.md)
