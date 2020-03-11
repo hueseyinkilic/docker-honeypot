@@ -6,6 +6,7 @@ RUN apt-get install python-termcolor python-paramiko python-pyip python-libpcap 
 # upgrade pip
 RUN pip install --upgrade pip
 RUN pip install Werkzeug
+# paramiko needed for tcp, not working yet 
 RUN pip install paramiko --ignore-installed
 
 RUN mkdir -p /app

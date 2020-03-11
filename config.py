@@ -3,6 +3,7 @@
 #       configure iptables (see README.md for full setup instructions).
 
 # IP to listen on. If you are behing NAT, this must be the private IP.
+# 0.0.0.0 not working yet. Goal: I want this to be filled by bash
 LOCAL_IP = '0.0.0.0'
 
 # iptables must be configured to redirect all incoming TCP connections to this
